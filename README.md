@@ -7,7 +7,7 @@ Work samples for MQL5 / MetaTrader 5 code review and debugging: the source of an
 | File | What it shows |
 |---|---|
 | [`TVWebhookExecutorEA.mq5`](TVWebhookExecutorEA.mq5) | MQL5 Expert Advisor (v1.31, ~64 KB) that polls a local signal server and executes trades on a **DEMO** account |
-| [`MT5_EA_Settings_Audit_sample.md`](MT5_EA_Settings_Audit_sample.md) | Read-only audit of the EA's defaults, inputs and safety behavior against the final DEMO configuration |
+| [`MT5_EA_Settings_Audit_sample.md`](MT5_EA_Settings_Audit_sample.md) | Read-only audit of the EA's defaults, inputs and safety behavior against the final DEMO configuration (written for v1.30, see version note) |
 | [`Reject_Reason_Audit_sample.md`](Reject_Reason_Audit_sample.md) | Audit of ~310k server log lines: why alerts were rejected, and a latent tick-size classification defect with a minimal patch and regression tests |
 
 ## What the EA does
@@ -28,7 +28,8 @@ The audits are the kind of deliverable I would write for a code review job: what
 
 ## Notes
 
+- **Version note:** the settings audit was written against v1.30. The source in this repo is v1.31, which differs in places (for example, the default `AllowedSymbols` list and how the traded volume is determined). The audit file lists the differences.
 - The EA is **webhook/server driven**, so it is not designed to run in the MT5 Strategy Tester.
 - The default `SecretKey` in the source is a placeholder, not a real secret.
 - Demo use only. This is engineering work, not trading advice, and no profitability is claimed.
-- Developed with AI-assisted tooling; every change is tested on a demo account and documented.
+- Developed with AI-assisted tooling; the audits above show how the code was reviewed.

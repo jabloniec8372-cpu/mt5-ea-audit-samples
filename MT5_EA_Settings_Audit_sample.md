@@ -2,6 +2,13 @@
 
 Read-only audit of an MQL5 Expert Advisor (`TVWebhookExecutorEA.mq5`, declared version 1.30 at audit time) used for automated DEMO execution on MetaTrader 5. No EA files, profiles, inputs, templates, entry logic, SL, TP, RR or position handling were changed during the audit. Local paths and identifiers have been removed from this copy.
 
+> **Version note:** this audit describes **v1.30**. The `TVWebhookExecutorEA.mq5` in this repo is **v1.31**. Checked against the v1.31 source, these statements below no longer hold for it:
+>
+> - The default `AllowedSymbols` is now the final six symbols, not 13.
+> - The traded volume comes from the signal and is capped per symbol by `SymbolLotLimits` (0.01 for XAUUSD, 0.15 for the forex pairs). `FixedLot` and `DemoSafeMode` are only written to the log, so the "fixed lot limited to 0.01" behavior described in sections 2 and 3 applies to v1.30 only.
+>
+> The DEMO-only account guard (`OnInit()` returns `INIT_FAILED` on a non-demo account) is present in both versions.
+
 Final symbol list for the DEMO run:
 
 ```text
@@ -13,7 +20,7 @@ AUDJPY,CADJPY,GBPAUD,XAUUSD,EURJPY,GBPJPY
 - The project source and the source deployed to the MT5 terminal had identical SHA256 hashes, so the deployed `.mq5` matched the project.
 - The deployed and project `.ex5` binaries had different hashes. A hash alone cannot show whether the difference is only compile metadata, so the recommendation was to confirm version `1.30` in the EA start-up log before running on DEMO.
 
-## 2. Default parameters vs. what the final DEMO needed
+## 2. Default parameters vs. what the final DEMO needed (v1.30)
 
 | Parameter | Code default | Assessment |
 |---|---|---|
@@ -26,10 +33,10 @@ AUDJPY,CADJPY,GBPAUD,XAUUSD,EURJPY,GBPJPY
 | `MaxOpenPositionsPerSymbol` | `1` | Correct |
 | `MoveToBreakEvenAtOneR` | `true` | Existing behavior, not changed |
 
-## 3. Safety behavior verified in code
+## 3. Safety behavior verified in code (v1.30)
 
 - **DEMO-only guard:** `OnInit()` returns `INIT_FAILED` if the account is not a DEMO account, which is stronger than the `DemoSafeMode` input alone.
-- **Lot cap:** the effective fixed lot is limited to 0.01; a symbol is rejected if the broker does not allow that volume.
+- **Lot cap (v1.30):** the effective fixed lot is limited to 0.01; a symbol is rejected if the broker does not allow that volume.
 - **Position limits:** `MaxOpenPositionsPerSymbol=1` is enforced for the whole symbol family; a second signal is rejected as `REJECT_MAX_SYMBOL_POSITIONS`.
 - **Secret check:** the secret returned inside a signal is compared with the local `SecretKey`; a mismatch is rejected as `REJECT_SECRET`.
 - **Broker symbol resolution:** exact name, `.raw` variant, no-suffix variant, `m` variant and prefix-based variants are all handled.
